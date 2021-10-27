@@ -6,8 +6,8 @@ data class RedditGetTopResponse(
 ) {
     data class DataChildren(
         var after: String?,
-        var before: Any?,
-        var children: List<Children?>?,
+        var before: String?,
+        var children: List<Children>?,
         ) {
         data class Children(
             var data: DataTop?,

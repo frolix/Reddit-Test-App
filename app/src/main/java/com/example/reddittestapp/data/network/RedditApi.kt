@@ -9,7 +9,7 @@ import retrofit2.http.Query
 interface RedditApi {
 
     @GET(Constants.GET_TOP)
-    fun getTopReddit(
+    suspend fun getTopReddit(
         @Query("after") after: String,
         @Query("limit") limit: String
     ): Response<RedditGetTopResponse>
