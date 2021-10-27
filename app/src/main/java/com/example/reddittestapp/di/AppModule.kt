@@ -3,6 +3,7 @@ package com.example.reddittestapp.di
 import android.content.Context
 import com.example.reddittestapp.MyApplication
 import com.example.reddittestapp.data.network.RedditApi
+import com.example.reddittestapp.paging.TopNewsPagingSource
 import com.example.reddittestapp.util.Constants
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -51,6 +52,10 @@ object AppModule {
     @Provides
     fun provideRedditApi(retrofit: Retrofit): RedditApi =
         retrofit.create(RedditApi::class.java)
+
+    @Provides
+    fun providePagingSource(apiService: RedditApi): TopNewsPagingSource =
+        TopNewsPagingSource(apiService)
 
 
 }
