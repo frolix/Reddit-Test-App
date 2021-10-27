@@ -8,7 +8,7 @@ import com.example.reddittestapp.data.network.model.RedditGetTopResponse
 import retrofit2.HttpException
 import javax.inject.Inject
 
-class TopNewsPagingSource@Inject constructor(
+class TopNewsPagingSource @Inject constructor(
     private val apiService: RedditApi
 ) : PagingSource<String, RedditGetTopResponse.DataChildren.Children>() {
 

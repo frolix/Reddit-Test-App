@@ -1,5 +1,7 @@
 package com.example.reddittestapp.presentation.fragment
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,49 +12,47 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.reddittestapp.data.network.model.RedditGetTopResponse
 import com.example.reddittestapp.databinding.FragmentTopNewsBinding
 import com.example.reddittestapp.domain.GetTopNewsRedditVM
+import com.example.reddittestapp.presentation.adapter.NewsRedditViewHolder
 import com.example.reddittestapp.presentation.adapter.RedditNewsTopAdapter
-import com.example.reddittestapp.util.autoCleared
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 
+
 @AndroidEntryPoint
-class TopNewsFragment : Fragment() {
+class TopNewsFragment : Fragment(), NewsRedditViewHolder.OnImageViewClickListener {
 
     private val adapter =
-        RedditNewsTopAdapter { name: String -> newsTopClickedPlayer(name) }
+        RedditNewsTopAdapter(this)
     private val getTopNewsRedditVM: GetTopNewsRedditVM by viewModels()
-    private var binding: FragmentTopNewsBinding by autoCleared()
 
+    private lateinit var binding : FragmentTopNewsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentTopNewsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
+    override fun onClickImageViewListener(
+        item: RedditGetTopResponse.DataChildren.Children
+    ) {
+        super.onClickImageViewListener(item)
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(item.data?.url_overridden_by_dest))
+        startActivity(browserIntent)
+    }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        startSearch()
-//        CoroutineScope(Dispatchers.Main).launch {
-//            delay(2000)
-            initAdapter()
-            startSearch()
-//        }
-
-
+        initAdapter()
+        startSearch()
     }
 
-
-    private fun newsTopClickedPlayer(name: String) {
-        val parentLayout = requireView().findViewById<View>(android.R.id.content)
-        Snackbar.make(parentLayout, name, Snackbar.LENGTH_LONG)
-            .show()
-    }
 
     private fun initAdapter() {
         binding.newsTopRecyclerView.apply {
@@ -69,12 +69,11 @@ class TopNewsFragment : Fragment() {
                 }
                 binding.errorTxt.isVisible = false
             } else {
-//                binding.progress.isVisible = false
+                binding.progress.isVisible = false
                 val error = when {
                     loadState.mediator?.prepend is LoadState.Error -> loadState.mediator?.prepend as LoadState.Error
                     loadState.mediator?.append is LoadState.Error -> loadState.mediator?.append as LoadState.Error
                     loadState.mediator?.refresh is LoadState.Error -> loadState.mediator?.refresh as LoadState.Error
-
                     else -> null
                 }
                 error?.let {

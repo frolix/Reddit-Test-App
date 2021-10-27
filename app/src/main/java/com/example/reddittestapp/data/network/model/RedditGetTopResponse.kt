@@ -17,11 +17,11 @@ data class RedditGetTopResponse(
                 var author: String?,
                 var title: String?,
                 var num_comments: Int?,
-                var created: Double?,
+                var created: Long?,
                 var thumbnail: String?,
                 var thumbnail_height: Int?,
                 var thumbnail_width: Int?,
-                var url: String?
+                var url_overridden_by_dest: String?,
             )
         }
     }
