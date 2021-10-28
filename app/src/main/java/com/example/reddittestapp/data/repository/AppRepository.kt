@@ -16,14 +16,14 @@ class AppRepository @Inject constructor(
 
 ) {
 
-    fun getTopRedditPaging(
-
-    ): LiveData<PagingData<RedditGetTopResponse.DataChildren.Children>> {
+    fun getTopRedditPaging(): LiveData<PagingData<RedditGetTopResponse.DataChildren.Children>> {
         return Pager(
-            config = PagingConfig(enablePlaceholders = false, pageSize = 10, initialLoadSize = 10),
+            config = PagingConfig(enablePlaceholders = true, pageSize = 10, initialLoadSize = 20),
             pagingSourceFactory = {
                 topNewsPagingSource
             }
         ).liveData
     }
+
+
 }

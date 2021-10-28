@@ -12,21 +12,18 @@ class TopNewsPagingSource @Inject constructor(
     private val apiService: RedditApi
 ) : PagingSource<String, RedditGetTopResponse.DataChildren.Children>() {
 
-    override fun getRefreshKey(state: PagingState<String, RedditGetTopResponse.DataChildren.Children>): String? {
+    override fun getRefreshKey(state: PagingState<String, RedditGetTopResponse.DataChildren.Children>): String {
         return state.anchorPosition.toString()
     }
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, RedditGetTopResponse.DataChildren.Children> {
-
         try {
-            val page: String = params.key.toString()
+            val page: String = params.key .toString()
             val pageSize: String = params.loadSize.toString()
-            Log.d("TopNewsPagingSource", "page: $page")
-            Log.d("TopNewsPagingSource", "pageSize: $pageSize")
-            val response = apiService.getTopReddit (page, pageSize)
+            val response = apiService.getTopReddit(page, pageSize )
 
+            Log.d("TopNewsPagingSource", "HttpException: ${response.body()}")
 
-            Log.d("TopNewsPagingSource", "response: "+response.body())
             return if (response.isSuccessful) {
                 val topNewsReddit = checkNotNull(response.body())
                 val topNewsRedditList = checkNotNull(response.body()?.data?.children)

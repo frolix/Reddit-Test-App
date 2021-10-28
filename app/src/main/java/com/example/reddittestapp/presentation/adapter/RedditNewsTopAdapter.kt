@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.reddittestapp.R
 import com.example.reddittestapp.data.network.model.RedditGetTopResponse
 import com.example.reddittestapp.databinding.ItemTopNewsBinding
 import com.example.reddittestapp.util.toTimeAgo
@@ -12,6 +13,7 @@ import com.squareup.picasso.Picasso
 
 class RedditNewsTopAdapter(
     private var clickListener: NewsRedditViewHolder.OnImageViewClickListener,
+    private var clickDownloadListener: NewsRedditViewHolder.OnDownloadClickListener,
 ) :
     PagingDataAdapter<RedditGetTopResponse.DataChildren.Children, NewsRedditViewHolder>(
         RedditNewsDiffCallBack()
@@ -21,7 +23,8 @@ class RedditNewsTopAdapter(
         return NewsRedditViewHolder(
             ItemTopNewsBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
-            ), clickListener
+            ), clickListener,
+            clickDownloadListener
         )
     }
 
@@ -50,6 +53,7 @@ class RedditNewsDiffCallBack : DiffUtil.ItemCallback<RedditGetTopResponse.DataCh
 class NewsRedditViewHolder(
     private val binding: ItemTopNewsBinding,
     private var clickListener: OnImageViewClickListener,
+    private var clickDownloadListener: OnDownloadClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(path: RedditGetTopResponse.DataChildren.Children?) {
@@ -57,8 +61,13 @@ class NewsRedditViewHolder(
 
 
             if (path.data?.thumbnail != null) {
+
                 binding.imgThumbnail.setOnClickListener {
                     clickListener.onClickImageViewListener(itChildren)
+                }
+
+                binding.downloadImages .setOnClickListener {
+                    clickDownloadListener.onDownloadViewListener(itChildren)
                 }
 
                 Picasso.get()
@@ -67,7 +76,7 @@ class NewsRedditViewHolder(
                     .centerCrop()
                     .into(binding.imgThumbnail)
             } else {
-                binding.imgThumbnail.setImageBitmap(null)
+                binding.imgThumbnail.setImageResource(R.drawable.img)
             }
 
             binding.description.text = itChildren.data?.title
@@ -80,6 +89,12 @@ class NewsRedditViewHolder(
 
     interface OnImageViewClickListener {
         fun onClickImageViewListener(
+            item: RedditGetTopResponse.DataChildren.Children
+        ) {
+        }
+    }
+    interface OnDownloadClickListener {
+        fun onDownloadViewListener(
             item: RedditGetTopResponse.DataChildren.Children
         ) {
         }

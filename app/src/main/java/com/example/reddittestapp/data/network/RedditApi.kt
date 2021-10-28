@@ -11,7 +11,7 @@ interface RedditApi {
     @GET(Constants.GET_TOP)
     suspend fun getTopReddit(
         @Query("after") after: String,
-        @Query("limit") limit: String
-    ): Response<RedditGetTopResponse>
+        @Query("limit") limit: String,
+        ): Response<RedditGetTopResponse>
 
 }

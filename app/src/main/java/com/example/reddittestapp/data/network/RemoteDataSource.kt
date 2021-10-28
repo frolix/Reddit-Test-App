@@ -1,6 +1,5 @@
 package com.example.reddittestapp.data.network
 
-import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 class RemoteDataSource @Inject constructor(
